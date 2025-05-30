@@ -61,6 +61,7 @@ class ListToDo extends React.Component {
     console.log(isEmtyObj);
     return (
       <div className="list-todo-container">
+        <p>Simple ToDo app with React.js Kurisu</p>
         <AddToDo addNewTodo={this.addNewTodo}></AddToDo>
         <div className="list-todo-content">
           {listTodos &&

@@ -52,6 +52,7 @@ class AddComponent extends React.Component {
             value={this.state.salary}
             onChange={(event) => this.handleChangeSalary(event)}
           />
+
           <br></br>
           <input
             type="submit"
