@@ -10,6 +10,7 @@ class ListToDo extends React.Component {
       { id: "todo2", title: "watch hentai" },
       { id: "todo3", title: "fap" },
     ],
+    editTodo: {},
   };
   addNewTodo = (todo) => {
     this.setState({
@@ -25,8 +26,39 @@ class ListToDo extends React.Component {
       listTodos: current,
     });
   };
+  handeleEdit = (todo) => {
+    let { editTodo, listTodos } = this.state;
+    let isEmtyObj = Object.keys(todo).length === 0;
+    if (!isEmtyObj && editTodo.id === todo.id) {
+      let copyList = [...listTodos];
+      console.log("save case");
+
+      let objIndex = copyList.findIndex((item) => item.id === todo.id);
+      listTodos[objIndex].title = editTodo.title;
+      this.setState({
+        listTodos: copyList,
+        editTodo: {},
+      });
+      toast.success("cap nhat thanh cmn cong!");
+      return;
+    }
+
+    this.setState({
+      editTodo: todo,
+    });
+  };
+  handeleOnchangeEdit = (event) => {
+    let edit = { ...this.state.editTodo };
+    edit.title = event.target.value;
+    console.log("check change", edit.title);
+    this.setState({
+      editTodo: edit,
+    });
+  };
   render() {
-    let { listTodos } = this.state;
+    let { listTodos, editTodo } = this.state;
+    let isEmtyObj = Object.keys(editTodo).length === 0;
+    console.log(isEmtyObj);
     return (
       <div className="list-todo-container">
         <AddToDo addNewTodo={this.addNewTodo}></AddToDo>
@@ -36,10 +68,38 @@ class ListToDo extends React.Component {
             listTodos.map((item, index) => {
               return (
                 <div className="todo-child" key={item.id}>
-                  <span>
-                    {index + 1}-{item.title}
-                  </span>
-                  <button className="edit">Edit</button>
+                  {isEmtyObj === true ? (
+                    <span>
+                      {index + 1}-{item.title}
+                    </span>
+                  ) : (
+                    <>
+                      {editTodo.id === item.id ? (
+                        <span>
+                          {" "}
+                          {index + 1} -{" "}
+                          <input
+                            value={editTodo.title}
+                            onChange={(event) =>
+                              this.handeleOnchangeEdit(event)
+                            }
+                          />
+                        </span>
+                      ) : (
+                        <span>
+                          {index + 1} - {item.title}
+                        </span>
+                      )}
+                    </>
+                  )}
+                  <button
+                    onClick={() => this.handeleEdit(item)}
+                    className="edit"
+                  >
+                    {isEmtyObj === false && editTodo.id === item.id
+                      ? "save"
+                      : "edit"}
+                  </button>
                   <button
                     className="delete"
                     onClick={() => this.deleteToDo(item)}
